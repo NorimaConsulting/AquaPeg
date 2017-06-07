@@ -50,7 +50,7 @@ export.addMeterForUser = (user, meterNumber,cb) => {
 				meterNumber,
 				owner:user
 				});
-	meter.save((err)=>{cb(err)});
+	meter.save((err) => {cb(err)} );
 
 }
 
@@ -61,10 +61,13 @@ export.removeMeterForUser = (user, meterID,cb) => {
 	var q = {owner:user, deletedAtDate:{$ne: true}};
 
 	Meter.findOne( q , (err, meter)=> {
-		meter.deletedAtDate = new Date();
-		meter.save((err) => { cb(err) });
+		if(err){
+			cb(err)
+		}else{
+			meter.deletedAtDate = new Date();
+			meter.save((err) => { cb(err) });
+		}
 	});
-
 }
 
 
@@ -82,7 +85,10 @@ export.sendNewReminder = (meter,cb) = >{
 
 	reminder.save((err) => {
 		//Send Email to user
-		emailController.sendReminder(meter.owner,meter,reminder, (err) => { cb(err) } );
+		if(err)
+			cb(err)
+		else
+			emailController.sendReminder(meter.owner,meter,reminder, (err) => { cb(err) } );
 	});
 
 
@@ -99,7 +105,10 @@ export.addMeterReadingWithReminderToken = (readingString, reminderToken,cb) => {
 	.populate("owner meter")
 	.exec((err,reminder) => {		
 		//Call addMeterReadingWithoutReminder
-		export.addMeterReadingWithoutReminder(reminder.owner,reminder.meter,cb)
+		if(err)
+			cb(err)
+		else
+			export.addMeterReadingWithoutReminder(reminder.owner,reminder.meter,cb)
 	});
 
 }
@@ -118,7 +127,10 @@ export.addMeterReadingWithoutReminder = (readingString, user, meter,cb) => {
 
 		reading.save( (err) =>{
 			//Start a Call to twilio
-			twilioController.submitMeterReading(user,meter,reading,(err) => { cb(err)});
+			if(err)
+				cb(err)
+			else
+				twilioController.submitMeterReading(user,meter,reading,(err) => { cb(err)});
 		} );
 		
 	} 
@@ -155,16 +167,25 @@ export.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
 	};
 
 	Reading.findOne(q)
+	.populate("owner meter")
 	.exec((err,reading)=>{
+		if(err){
+			cb(err)
+		}else{
 		
-		var conf = new Confirmation({
-			reading,
-			transcript: audioTranscript,
-			audio:audioBuffer
-		})
-		conf.save((err) => {
-			eb(err);
-		});
+			var conf = new Confirmation({
+				reading,
+				transcript: audioTranscript,
+				audio:audioBuffer
+			})
+			conf.save((err) => {
+				if(err)
+					cb(err)
+				else
+					emailController.sendReadingConfirmation(reading.owner,reading.meter, reading, audioBuffer,audioTranscript, (err) => { cb(err) } );
+			});
+
+		}
 
 	})
 		
