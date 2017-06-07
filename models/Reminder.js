@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const TimeToLivePeriodms = 1000 * 60 * 60 * 24 * 7 //One Week
 
 const reminderSchema = new mongoose.Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  owner: { type: Schema.Types.ObjectId, ref: 'User' },
   meter: { type: Schema.Types.ObjectId, ref: 'Meter' },
   used:Date,
   timeToLive:{

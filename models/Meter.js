@@ -5,7 +5,7 @@ const meterSchema = new mongoose.Schema({
   meterNumber:String,
   deletedAtDate:Date,
   reminderSchedulePeriod:{type:Number, default:(1000*60*60*24*365)/4},
-  user: { type: Schema.Types.ObjectId, ref: 'User' }
+  owner: { type: Schema.Types.ObjectId, ref: 'User' }
 
 }, { timestamps: true });
 
