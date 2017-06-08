@@ -1,6 +1,19 @@
 Response
-  Say I will pause 10 seconds starting now!
-  Pause( length='10')
-  Say I just paused 10 seconds
-  Say= reading.readingString
-  Play goodbye.wav
+  Pause( length='5')
+  Say Hello this is an automated entry
+  Say Entering Meter Number
+  each val in meterNumberArr
+    Say= val
+    Play( digits="ww"+val )
+  Say= Pound
+  Play( digits="ww#" )
+
+  each val in readingStringArr
+    Say= val
+    Play( digits="ww"+val )
+  Say= Pound
+  Play( digits="ww#" )
+
+
+
+  Say Done!

@@ -17,9 +17,14 @@ router.post('/SubmitReading/:readingID', (req, res) => {
 
   meterController.getAReadingByID(readingID, (err,reading)=>{
     if(reading){
+      meterNumberArr = getArrayOfDigits(reading.meter.meterNumber);
+      readingStringArr = getArrayOfDigits(reading.readingString);
+
       res.setHeader("Content-Type", "application/xml");
       res.render('submitReadingxml', {
-        reading
+        reading,
+        meterNumberArr,
+        readingStringArr
 
       });
     }
@@ -34,5 +39,13 @@ router.post('/ReadingHasBeenSubmited/:ReadingID', (req, res) => {
 
 });
 
+
+function getArrayOfDigits(str) {
+  var output = str.split('');
+  for (var i = 0; i < output.length; i++) {
+    output[i] = parseInt(output[i]);
+  }
+  return output;
+}
 
 module.exports = router;

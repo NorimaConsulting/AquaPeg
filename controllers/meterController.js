@@ -232,6 +232,7 @@ exports.getAReadingByID = (rID,cb) => {
 
 	var q = {_id:rID}
 	Reading.findOne(q)
+	.populate("meter")
 	.exec((err,reading) => {
 		console.log(err);
 		console.log(reading);

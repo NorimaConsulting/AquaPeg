@@ -51,7 +51,8 @@ sendCall = (toPhone, messageURL, callback) => {
   client.makeCall({
     to: toPhone,
     from: creds.getPhone(),
-    url: messageURL
+    url: messageURL,
+    record : true
   }, function(err, call) {
       callback(err,call);
   });
