@@ -1,10 +1,12 @@
 Response
   Pause( length='5')
   Say Hello this is an automated entry
+  Say Selecting English
+  Play( digits="wwww1wwww" )
   Say Entering Meter Number
   each val in meterNumberArr
     Say= val
-    Play( digits="ww"+val+"w" )
+    Play( digits="wwww"+val+"wwww" )
   Say= Pound
   Play( digits="ww#" )
 
@@ -13,7 +15,7 @@ Response
 
   each val in readingStringArr
     Say= val
-    Play( digits="ww"+val+"w" )
+    Play( digits="wwww"+val+"wwww" )
   Say= Pound
   Play( digits="ww#" )
 
