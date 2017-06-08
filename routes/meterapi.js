@@ -65,7 +65,20 @@ router.post('/meter/:meterID/Reading/', passportConfig.isAuthenticated, (req, re
       }
     });
   }else{
-    res.status(400).send({message:"Missing a Parameter"})
+    var msg = "Unknow Error"
+    if(!meterID)
+      msg = "No Meter ID"
+
+    if(!req.user)
+      msg = "No User"
+
+    if(!readingString)
+      msg = "Missing Reading String"
+
+    if(!isNormalInteger(readingString))
+      msg = "A Bad Reading String"
+
+    res.status(400).send({message:msg})
   }
 });
 

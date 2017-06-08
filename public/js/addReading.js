@@ -8,14 +8,14 @@ $(()=>{
 
       $(e.target).addClass("disabled")
 
-      sendToServer();
+      sendToServer(e);
     };
 
   });
 })
 
 
-function sendToServer() {
+function sendToServer(event) {
   var meterID = $("#meterIDInput").val();
   meterID = meterID.trim();
 
@@ -52,8 +52,9 @@ function sendToServer() {
     }else{
       $(".submitNewMeterError").removeClass("hidden");
     }
-  }).fail(()=>{
+  }).fail((transcation)=>{
     $(".submitNewMeterError").removeClass("hidden");
-    $(e.target).removeClass("disabled")
+    $(event.target).removeClass("disabled");
+    $(".submitNewMeterError span").html(transcation.responseJSON.message);
   });
 }
