@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1 Add a meter Reading
+  p.lead= meter.meterNumber
+  hr
+  .row
+    .col-md-offset-2.col-md-8
+      .form-group
+          label(for='meterNumberInput') Reading Value
+          input#meterIDInput.form-control(type='hidden', value=meter._id)
+          if reminderToken
+            input#reminderTokenInput.form-control(type='hidden', value=reminderToken)
+
+
+          input#meterReadingInput.form-control(type='text' placeholder='Reading Value')
+
+
+
+          .alert.hidden.alert-danger.submitNewMeterError(role='alert')
+            strong Oh Snap!
+            |There was a problem, eh?
+          submit.btn.btn-success.saveReading(href='#')
+            i.fa.fa-tachometer.fa-lg
+            |  Add
+
+block scripts
+  script(src='/js/addReading.js')

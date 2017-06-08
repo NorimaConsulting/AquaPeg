@@ -1,0 +1,67 @@
+extends layout
+
+block content
+  h1 Hackathon Starter
+  p.lead A boilerplate for Node.js web applications.
+  hr
+  .row
+    .col-md-offset-2.col-md-8
+      button.btn.btn-default.addMeter(data-toggle="modal" data-target=".add-meter-modal")
+        i.fa.fa-tint.fa-lg
+        |  Add New Meter
+
+
+
+      table.table.table-striped
+        caption Checkout these meters
+        thead
+          tr
+            th Meter Number
+            th Latest Reading
+            th Actions
+        tbody
+          each meter in meters
+            tr
+              td= meter.meterNumber
+              td
+                if meter.latestReadings
+                  |meter.latestReadings.created_at
+                else
+                  |No Readings
+              td
+                a.btn.btn-primary.btn-sm(href='/Meter/'+meter._id+'/')
+                  i.fa.fa-eye
+                a.btn.btn-danger.btn-sm.deleteMeterButton(href='#' meterID=meter._id)
+                  i.fa.fa-trash-o
+
+
+          if meters.length == 0
+            tr
+              td(colspan=3)
+                button.btn.addMeter(data-toggle="modal" data-target=".add-meter-modal")
+                  i.fa.fa-tint.fa-lg
+                  | You don't have any meters click to add new meter
+
+  .modal.fade.add-meter-modal(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel')
+    .modal-dialog.modal-sm(role='document')
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4#myLargeModalLabel.modal-title Add A new meter
+        .modal-body
+          .form-group
+              label(for='meterNumberInput') Meter Number
+              input#meterNumberInput.form-control(type='text', placeholder='Meter Number' name='meterNumber')
+              .alert.hidden.alert-danger.submitNewMeterError(role='alert')
+                strong Oh Snap!
+                |There was a problem, eh?
+              submit.btn.btn-success.saveNewMeter(href='#')
+                i.fa.fa-tachometer.fa-lg
+                |  Add
+
+
+
+
+block scripts
+  script(src='/js/addMeter.js')

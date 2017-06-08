@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  h1 Meter Summary
+  p.lead= meter.meterNumber
+  hr
+  .row
+    .col-md-offset-2.col-md-8
+      a.btn.btn-default(href='/Meter/' + meter._id + '/New-Reading')
+        i.fa.fa-tachometer.fa-lg
+        |  Add a Reading
+
+
+
+      table.table.table-striped
+        caption Checkout these meters
+        thead
+          tr
+            th Reading Time
+            th Reading Value
+            th Confirmed
+        tbody
+          each reading in readings
+            tr
+              if(moment(reading.createdAt).add(12, 'hours').isAfter(moment()))
+                td= moment(reading.createdAt).fromNow()
+              else
+                td= moment(reading.createdAt).format('LLL')
+              td= reading.readingString
+              td
+                if reading.confirmation
+                  |Yes
+                else
+                  |No
+
+
+
+          if readings.length == 0
+            tr
+              td(colspan=3)
+                a.btn.btn-success.addMeter(href='./New-Reading')
+                  i.fa.fa-tachometer.fa-lg
+                  | You don't have any readings click to add one

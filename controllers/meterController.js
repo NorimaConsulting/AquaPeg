@@ -7,16 +7,19 @@ const Reminder = require('../models/Reminder.js');
 const Confirmation = require('../models/Confirmation.js');
 
 
-const emailController = require('emailController.js');
-const twilioController = require('twilioController.js');
+const emailController = require('./emailController.js');
+const twilioController = require('./twilioController.js');
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId
 
 
 
-
-export.getAllMeters = (user,cb) => {
+exports.getAllMeters = (user,cb) => {
 
 	//Get all !deleted;
-	var q = {deletedAtDate:{$ne: true}};
+	var q = {deletedAtDate:null};
 
 	Meter.find( q )
 	.populate("owner")
@@ -30,13 +33,54 @@ export.getAllMeters = (user,cb) => {
 
 
 
-export.getMetersForUser = (user,cb) => {
+exports.getMetersForUser = (user,cb) => {
 
 	//Check User && !deletedAtDate
-	var q = {owner:user, deletedAtDate:{$ne: true}};
+	var q = {owner:user, deletedAtDate:null};
 
-	Meter.find( q , (err, meters)=> {
+	Meter.find( q, (err, meters)=> {
 		cb(err, meters);
+	});
+
+}
+
+exports.getMetersForUserWithLatestReading = (user,cb) => {
+
+	//Check User && !deletedAtDate
+	var q = {owner:user, deletedAtDate:null};
+
+	Meter.find( q, (err, meters)=> {
+
+		var waitingFor = meters.length;
+		for (var i = 0; i < meters.length; i++) {
+			var curPos = i;
+			exports.getLatestReadingsForMeter(meters[i],(err,reading) => {
+				if(reading){
+					meters[curPos].latestReading = reading
+				}
+
+				waitingFor--;
+				if(waitingFor<=0){
+					cb(err,meters)
+				}
+			});
+		}
+	});
+
+}
+
+exports.getMeterForUser = (meterID, user,cb) => {
+
+	//Check User && !deletedAtDate
+	var q = {	_id: meterID,
+		 				owner:user._id,
+						deletedAtDate:null
+					};
+
+	Meter.findOne(q)
+	.populate("owner")
+	.exec((err, meter) => {
+		cb(err, meter);
 	});
 
 }
@@ -44,7 +88,7 @@ export.getMetersForUser = (user,cb) => {
 
 
 
-export.addMeterForUser = (user, meterNumber,cb) => {
+exports.addMeterForUser = (user, meterNumber,cb) => {
 
 	var meter = new Meter({
 				meterNumber,
@@ -55,10 +99,13 @@ export.addMeterForUser = (user, meterNumber,cb) => {
 }
 
 
-export.removeMeterForUser = (user, meterID,cb) => {
+exports.removeMeterForUser = (user, meterID,cb) => {
 
 	//set deletedAtDate
-	var q = {owner:user, deletedAtDate:{$ne: true}};
+	var q = {	owner:user,
+						deletedAtDate:null,
+						_id: meterID
+					};
 
 	Meter.findOne( q , (err, meter)=> {
 		if(err){
@@ -74,12 +121,12 @@ export.removeMeterForUser = (user, meterID,cb) => {
 
 
 
-//Sending A Reminder 
-export.sendNewReminder = (meter,cb) = >{
+//Sending A Reminder
+exports.sendNewReminder = (meter,cb) =>{
 
 	//Create a reminder in the DB
 	var reminder = new Reminder({
-									owner:meter.owner, 
+									owner:meter.owner,
 									meter
 								})
 
@@ -94,76 +141,113 @@ export.sendNewReminder = (meter,cb) = >{
 
 }
 
+exports.getReminderForToken = (token,cb) => {
+	var q = {accessCode:token};
+
+	Reminder.findOne(q)
+	.exec(cb);
+
+}
+
+exports.getMeterForActiveToken = (token,cb) => {
+	var q = {	accessCode:token,
+						used:null,
+						timeToLive : { $gt : new Date() }
+					};
+
+	Reminder.findOne(q)
+	.populate("meter")
+	.exec((err, reminder) => {
+		cb(err,reminder.meter)
+	});
+}
+
 
 
 
 //Adding A Reading
-export.addMeterReadingWithReminderToken = (readingString, reminderToken,cb) => {
+exports.addMeterReadingWithReminderToken = (readingString, reminderToken,cb) => {
 
 	//Find Reminder with
-	Reminder.findOne(token:reminderToken)
+	Reminder.findOne({token:reminderToken})
 	.populate("owner meter")
-	.exec((err,reminder) => {		
+	.exec((err,reminder) => {
 		//Call addMeterReadingWithoutReminder
 		if(err)
 			cb(err)
 		else
-			export.addMeterReadingWithoutReminder(reminder.owner,reminder.meter,cb)
+			exports.addMeterReadingWithoutReminder(reminder.owner,reminder.meter,cb)
 	});
 
 }
 
-export.addMeterReadingWithoutReminder = (readingString, user, meter,cb) => {
+exports.addMeterReadingWithoutReminder = (readingString, user, meterID,cb) => {
 
-	
-	//Add Reading To the DB
-	if(meter.user == user){
+	exports.getMeterForUser(meterID,user,(err, meter)=>{
+		//Add Reading To the DB
+		console.log(meter.owner._id);
+		console.log(user._id);
+		console.log(meter.owner._id.equals(user._id));
+		if(meter.owner._id.equals(user._id)){
 
-		var reading = new Reading({
-			readingString,
-			owner : user,
-			meter,
-		});
+			var reading = new Reading({
+				readingString,
+				owner : user,
+				meter,
+			});
 
-		reading.save( (err) =>{
-			//Start a Call to twilio
-			if(err)
-				cb(err)
-			else
-				twilioController.submitMeterReading(user,meter,reading,(err) => { cb(err)});
-		} );
-		
-	} 
-	else
-	{
-		cb("User didn't Match")
-	}
-		
+			reading.save( (err) =>{
+				//Start a Call to twilio
+				console.log("This is saved");
+				if(err)
+					cb(err)
+				else
+					twilioController.submitMeterReading(user,meter,reading,(err) => { cb(err)});
+			} );
 
+		}
+		else
+		{
+			cb("User didn't Match")
+		}
+	});
 
 
 }
 
 //Get All Readings
-export.getAllReadingsForMeter(meter,cb){
+exports.getAllReadingsForMeter = (meter,cb) => {
 
 	//Find All Reading for Meter
 	var q = {meter};
-	Meter.find(q)
+	Reading.find(q)
+	.sort({createdAt: -1})
 	.exec((err,readings) => {
+		console.log(readings)
 		cb(err,readings);
+	});
+}
+
+exports.getLatestReadingsForMeter = (meter,cb) => {
+
+	//Find All Reading for Meter
+	var q = {meter};
+	Reading.findOne(q,{})
+	.sort({createdAt: -1})
+	.exec((err,reading) => {
+		cb(err,reading);
 	});
 }
 
 
 //Confirm a Reading
 
-export.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
+exports.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
 
 	//Find Reading
 	var q = {
 		_id : readingID,
-		confirmation:{$ne: true}
+		confirmation:null
 	};
 
 	Reading.findOne(q)
@@ -172,7 +256,7 @@ export.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
 		if(err){
 			cb(err)
 		}else{
-		
+
 			var conf = new Confirmation({
 				reading,
 				transcript: audioTranscript,
@@ -188,12 +272,6 @@ export.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
 		}
 
 	})
-		
+
 
 }
-
-
-
-
-
-
