@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
 
 router.get('/All-Meters', passportConfig.isAuthenticated, (req, res) => {
   meterController.getMetersForUserWithLatestReading(req.user,(err,meters)=>{
+    console.log("Got it")
     if(err){
       res.status(500).send(err)
     }else{
