@@ -9,7 +9,7 @@ const passportConfig = require('../config/passport');
 const meterController = require('../controllers/meterController');
 
 
-router.get('/SubmitReading/:readingID', (req, res) => {
+router.post('/SubmitReading/:readingID', (req, res) => {
 
   var readingID = req.params.readingID;
   readingID = readingID.trim();
