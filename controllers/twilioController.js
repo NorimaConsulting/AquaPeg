@@ -70,7 +70,7 @@ exports.submitMeterReading = (user,meter,reading,cb)=>{
 	console.log("Reading: "+ reading.readingString);
 	console.log("==========================");
 
-	var messageURL = process.env.HOST_URL + "/twilio-api/SubmitReading/" + reading._id;
+	var messageURL = process.env.HOST_URL + "twilio-api/SubmitReading/" + reading._id;
 	var callTo = process.env.TWILIO_SEND_TO_PHONE_NUMBER
 
 	sendCall(callTo,messageURL,(err,call) => {
