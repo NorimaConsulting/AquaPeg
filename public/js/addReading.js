@@ -4,7 +4,7 @@
 $(()=>{
   $('.saveReading').click((e) => {
 
-    if($(e.target).hasClass("disabled")){
+    if(!$(e.target).hasClass("disabled")){
 
       $(e.target).addClass("disabled")
 
