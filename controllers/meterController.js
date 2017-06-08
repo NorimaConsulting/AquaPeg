@@ -48,10 +48,13 @@ exports.getMetersForUserWithLatestReading = (user,cb) => {
 
 	//Check User && !deletedAtDate
 	var q = {owner:user, deletedAtDate:null};
-
 	Meter.find( q, (err, meters)=> {
 
 		var waitingFor = meters.length;
+		if(waitingFor<=0){
+			cb(err,meters)
+		}
+
 		for (var i = 0; i < meters.length; i++) {
 			var curPos = i;
 			exports.getLatestReadingsForMeter(meters[i],(err,reading) => {
@@ -185,9 +188,6 @@ exports.addMeterReadingWithoutReminder = (readingString, user, meterID,cb) => {
 
 	exports.getMeterForUser(meterID,user,(err, meter)=>{
 		//Add Reading To the DB
-		console.log(meter.owner._id);
-		console.log(user._id);
-		console.log(meter.owner._id.equals(user._id));
 		if(meter.owner._id.equals(user._id)){
 
 			var reading = new Reading({
@@ -198,7 +198,6 @@ exports.addMeterReadingWithoutReminder = (readingString, user, meterID,cb) => {
 
 			reading.save( (err) =>{
 				//Start a Call to twilio
-				console.log("This is saved");
 				if(err)
 					cb(err)
 				else
@@ -223,8 +222,20 @@ exports.getAllReadingsForMeter = (meter,cb) => {
 	Reading.find(q)
 	.sort({createdAt: -1})
 	.exec((err,readings) => {
-		console.log(readings)
 		cb(err,readings);
+	});
+}
+
+exports.getAReadingByID = (rID,cb) => {
+
+	//Find All Reading for Meter
+
+	var q = {_id:rID}
+	Reading.findOne(q)
+	.exec((err,reading) => {
+		console.log(err);
+		console.log(reading);
+		cb(err,reading);
 	});
 }
 

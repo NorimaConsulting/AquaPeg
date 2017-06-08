@@ -9,11 +9,25 @@ const passportConfig = require('../config/passport');
 const meterController = require('../controllers/meterController');
 
 
-router.get('/SubmitReading/:ReadingID', (req, res) => {
+router.get('/SubmitReading/:readingID', (req, res) => {
 
-  res.render('submitReadingxml', {
+  var readingID = req.params.readingID;
+  readingID = readingID.trim();
+  console.log(readingID)
 
-  });
+  meterController.getAReadingByID(readingID, (err,reading)=>{
+    if(reading){
+      res.setHeader("Content-Type", "application/xml");
+      res.render('submitReadingxml', {
+        reading
+
+      });
+    }
+    else{
+      res.status(404).send("Reading Not Found")
+    }
+  })
+
 });
 
 router.post('/ReadingHasBeenSubmited/:ReadingID', (req, res) => {
