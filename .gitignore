@@ -20,7 +20,9 @@ public/css/main.css
 .env
 
 # Dependency directory
-node_modules
+node_modules/*
+!node_modules/node-sass/
+
 bower_components
 
 # Editors
