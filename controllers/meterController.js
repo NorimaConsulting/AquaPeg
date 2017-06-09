@@ -296,8 +296,6 @@ exports.getAReadingByID = (rID,cb) => {
 	Reading.findOne(q)
 	.populate("meter")
 	.exec((err,reading) => {
-		console.log(err);
-		console.log(reading);
 		cb(err,reading);
 	});
 }
