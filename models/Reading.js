@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const readingSchema = new Schema({
   readingString:String,
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  owner: { type: Schema.Types.ObjectId, ref: 'User' },
   meter: { type: Schema.Types.ObjectId, ref: 'Meter' },
   confirmation: { type: Schema.Types.ObjectId, ref: 'Confirmation', default:null}
 

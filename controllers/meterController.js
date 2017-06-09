@@ -323,7 +323,8 @@ exports.addReadingConfirmation = (readingID,audioUrl,audioTranscript,cb) => {
 	};
 
 	Reading.findOne(q)
-	.populate("owner meter")
+	.populate("owner")
+	.populate("meter")
 	.exec((err,reading)=>{
 		if(err){
 			cb(err)
