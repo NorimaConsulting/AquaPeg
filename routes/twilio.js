@@ -50,7 +50,7 @@ router.post('/ReadingHasBeenSubmited/:readingID', (req, res) => {
     console.log(req.body.RecordingUrl)
     meterController.addReadingConfirmation(readingID,
       req.body.RecordingUrl,
-      audioTranscript,
+      "",
       (err)=>{
         if(err){
           res.status(500).send(err)
