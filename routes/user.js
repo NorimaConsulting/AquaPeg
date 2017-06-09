@@ -274,7 +274,7 @@ exports.postReset = (req, res, next) => {
   const sendResetPasswordEmail = (user) => {
     if (!user) { return; }
     emailController.genericEmail(user.email,
-      'Your H2-Go password has been changed',
+      'Your H2-GO password has been changed',
       `Hello,\n\nThis is a confirmation that the password \
       for your account ${user.email} has just been changed.\n`,
       () => {
