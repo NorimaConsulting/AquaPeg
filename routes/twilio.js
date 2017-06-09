@@ -36,9 +36,13 @@ router.post('/SubmitReading/:readingID', (req, res) => {
 });
 
 router.post('/ReadingHasBeenSubmited/:ReadingID', (req, res) => {
+  var readingID = req.params.readingID;
+  readingID = readingID.trim();
+
 
   console.log("============Confirm Recived===========");
-  console.log(req.body.CallStatus)
+  console.log(req.body)
+  console.log(readingID)
   console.log("============END===========");
 
 
