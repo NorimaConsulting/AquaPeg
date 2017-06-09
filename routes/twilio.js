@@ -47,8 +47,8 @@ router.post('/ReadingHasBeenSubmited/:readingID', (req, res) => {
 
 
   if(req.body.RecordingStatus =="completed"){
-    console.log(req.body.RecodingUrl)
-    emailController.addReadingConfirmation(readingID,
+    console.log(req.body.RecordingUrl)
+    meterController.addReadingConfirmation(readingID,
       req.body.RecordingUrl,
       audioTranscript,
       (err)=>{
