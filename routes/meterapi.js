@@ -92,7 +92,7 @@ router.post('/meter/reminder/:reminderToken/Reading/', (req, res) => {
   if( reminderToken && isNormalInteger(readingString) ){
     meterController.addMeterReadingWithReminderToken(readingString, reminderToken,(err)=>{
       if(err){
-        res.status(500).send(err)
+        res.status(err.status || 500).send(err)
       } else {
         res.send({success:true})
       }

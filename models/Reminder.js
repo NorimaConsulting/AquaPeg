@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const randToken = require('rand-token');
+
 
 const TimeToLivePeriodms = 1000 * 60 * 60 * 24 * 7 //One Week
 

@@ -3,6 +3,7 @@ const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
+const emailController = require('../controllers/emailController')
 
 /**
  * GET /login
@@ -272,23 +273,15 @@ exports.postReset = (req, res, next) => {
 
   const sendResetPasswordEmail = (user) => {
     if (!user) { return; }
-    const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
-      }
-    });
-    const mailOptions = {
-      to: user.email,
-      from: 'hackathon@starter.com',
-      subject: 'Your Hackathon Starter password has been changed',
-      text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
-    };
-    return transporter.sendMail(mailOptions)
-      .then(() => {
-        req.flash('success', { msg: 'Success! Your password has been changed.' });    
+    emailController.genericEmail(user.email,
+      'Your H2-Go password has been changed',
+      `Hello,\n\nThis is a confirmation that the password \
+      for your account ${user.email} has just been changed.\n`,
+      () => {
+        req.flash('success', { msg: 'Success! Your password has been changed.' });
       });
+
+
   };
 
   resetPassword()
@@ -345,27 +338,19 @@ exports.postForgot = (req, res, next) => {
 
   const sendForgotPasswordEmail = (user) => {
     if (!user) { return; }
+
     const token = user.passwordResetToken;
-    const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
-      }
-    });
-    const mailOptions = {
-      to: user.email,
-      from: 'hackathon@starter.com',
-      subject: 'Reset your password on Hackathon Starter',
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+
+    emailController.genericEmail(user.email,
+      'Reset your password on H2-Go',
+      `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
         http://${req.headers.host}/reset/${token}\n\n
-        If you did not request this, please ignore this email and your password will remain unchanged.\n`
-    };
-    return transporter.sendMail(mailOptions)
-      .then(() => {
+        If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      () => {
         req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` });
       });
+
   };
 
   createRandomToken

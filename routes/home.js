@@ -17,7 +17,6 @@ router.get('/', (req, res) => {
 
 router.get('/All-Meters', passportConfig.isAuthenticated, (req, res) => {
   meterController.getMetersForUserWithLatestReading(req.user,(err,meters)=>{
-    console.log("Got it")
     if(err){
       res.status(500).send(err)
     }else{
@@ -68,11 +67,16 @@ router.get('/Meter/reminder/:reminderToken/New-Reading', (req, res) => {
   reminderToken = reminderToken.trim();
 
   meterController.getMeterForActiveToken(reminderToken,(err,meter) =>{
-    res.render('newReading', {
-      title: 'New Readings',
-      meter,
-      reminderToken
-    });
+    if(meter){
+      res.render('newReading', {
+        title: 'New Readings',
+        meter,
+        reminderToken
+      });
+    }else{
+      res.status(404).send("No Token Found")
+    }
+
   });
 
 });

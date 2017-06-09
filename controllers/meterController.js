@@ -16,19 +16,74 @@ const ObjectId = Schema.Types.ObjectId
 
 
 
-exports.getAllMeters = (user,cb) => {
-
+exports.getAllMetersWithOwnerReminderReading = (cb) => {
 	//Get all !deleted;
 	var q = {deletedAtDate:null};
-
 	Meter.find( q )
 	.populate("owner")
 	.exec(
 			(err, meters) => {
-				cb(err, meters);
+
+				addLatestReminderToMeter(meters,
+																	(err,meters)=>{
+																		addLatestReadingToMeter(meters,
+																														(err,meters)=>{
+																															cb(err,meters);
+																														})
+																	});
+
 			}
 		);
 
+}
+
+function addLatestReminderToMeter(meters,cb){
+
+	var metersLeft = meters.length;
+
+	for (var i = 0; i < meters.length; i++) {
+
+		(function(ii) {
+			Reminder.findOne({meter:meters[i]})
+			.sort({createdAt: -1})
+			.exec((err,reminder)=>{
+				metersLeft--;
+				if(reminder){
+					meters[ii].latestReminder = reminder
+				}
+
+				if(metersLeft<=0){
+					cb(null,meters)
+				}
+
+			});
+		})(i)
+	}
+}
+
+function addLatestReadingToMeter(meters,cb){
+
+	var metersLeft = meters.length;
+
+	for (var i = 0; i < meters.length; i++) {
+
+		(function(ii) {
+			Reading.findOne({meter:meters[i]})
+			.sort({createdAt: -1})
+			.exec((err,reading)=>{
+				metersLeft--;
+				if(reading){
+					meters[ii].latestReading = reading
+				}
+
+				if(metersLeft<=0){
+					cb(null,meters)
+				}
+
+			});
+		})(i)
+
+	}
 }
 
 
@@ -161,7 +216,12 @@ exports.getMeterForActiveToken = (token,cb) => {
 	Reminder.findOne(q)
 	.populate("meter")
 	.exec((err, reminder) => {
-		cb(err,reminder.meter)
+		if(reminder){
+			cb(err,reminder.meter)
+		}else{
+			cb(err,null)
+		}
+
 	});
 }
 
@@ -172,14 +232,16 @@ exports.getMeterForActiveToken = (token,cb) => {
 exports.addMeterReadingWithReminderToken = (readingString, reminderToken,cb) => {
 
 	//Find Reminder with
-	Reminder.findOne({token:reminderToken})
+	Reminder.findOne({accessCode:reminderToken})
 	.populate("owner meter")
 	.exec((err,reminder) => {
 		//Call addMeterReadingWithoutReminder
-		if(err)
-			cb(err)
+		if(err )
+			cb(err,reminder)
+		else if (!reminder)
+			cb({message:"No Reminder Found",status:404},reminder)
 		else
-			exports.addMeterReadingWithoutReminder(reminder.owner,reminder.meter,cb)
+			exports.addMeterReadingWithoutReminder(readingString,reminder.owner,reminder.meter._id,cb)
 	});
 
 }
