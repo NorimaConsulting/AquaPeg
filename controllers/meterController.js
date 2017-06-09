@@ -282,8 +282,10 @@ exports.getAllReadingsForMeter = (meter,cb) => {
 	//Find All Reading for Meter
 	var q = {meter};
 	Reading.find(q)
+	.populate("confirmation")
 	.sort({createdAt: -1})
 	.exec((err,readings) => {
+		console.log(readings);
 		cb(err,readings);
 	});
 }
@@ -304,9 +306,9 @@ exports.getLatestReadingsForMeter = (meter,cb) => {
 
 	//Find All Reading for Meter
 	var q = {meter};
-	Reading.findOne(q,{})
-	.sort({createdAt: -1})
+	Reading.findOne(q)
 	.populate("confirmation")
+	.sort({createdAt: -1})
 	.exec((err,reading) => {
 		cb(err,reading);
 	});
@@ -329,6 +331,8 @@ exports.addReadingConfirmation = (readingID,audioUrl,audioTranscript,cb) => {
 	.exec((err,reading)=>{
 		if(err){
 			cb(err)
+		}else if (reading.confirmation){
+			cb({message:"Already Confrimed"})
 		}else{
 
 			var conf = new Confirmation({
