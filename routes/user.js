@@ -342,7 +342,7 @@ exports.postForgot = (req, res, next) => {
     const token = user.passwordResetToken;
 
     emailController.genericEmail(user.email,
-      'Reset your password on H2-Go',
+      'Reset your password on H2-GO',
       `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
         http://${req.headers.host}/reset/${token}\n\n
