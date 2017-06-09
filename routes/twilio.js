@@ -35,7 +35,7 @@ router.post('/SubmitReading/:readingID', (req, res) => {
 
 });
 
-router.post('/ReadingHasBeenSubmited/:ReadingID', (req, res) => {
+router.post('/ReadingHasBeenSubmited/:readingID', (req, res) => {
   var readingID = req.params.readingID;
   readingID = readingID.trim();
 
