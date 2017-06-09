@@ -29,8 +29,8 @@ block content
               td= reading.readingString
               td
                 if reading.confirmation
-                  |Yes
-                  a.btn.btn-success.btn-sm(href=reading.confirmation.audioUrl)
+                  |Yes 
+                  a(href=reading.confirmation.audioUrl)
                     i.fa.fa-play-circle-o
                 else
                   |No

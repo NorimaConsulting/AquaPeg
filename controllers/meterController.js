@@ -306,6 +306,7 @@ exports.getLatestReadingsForMeter = (meter,cb) => {
 	var q = {meter};
 	Reading.findOne(q,{})
 	.sort({createdAt: -1})
+	.populate("confirmation")
 	.exec((err,reading) => {
 		cb(err,reading);
 	});
