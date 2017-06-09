@@ -80,11 +80,12 @@ exports.sendReminder = (user,meter,reminder,cb)=>{
 }
 
 
-exports.sendReadingConfirmation = (user, meter, reading, audioBuffer, audioTranscript, cb) =>{
+exports.sendReadingConfirmation = (user, meter, reading, audioUrl, audioTranscript, cb) =>{
 	console.log("===========================");
 	console.log("	Confirmation Email		");
 	console.log("===========================");
 	console.log("User Email: "+ user.email);
+	console.log("audioUrl: "+ audioUrl);
 	console.log("Meter: "+ meter.meterNumber);
 	console.log("Reading: "+ reading.readingString);
 	console.log("audioTranscript: "+ reading.audioTranscript);

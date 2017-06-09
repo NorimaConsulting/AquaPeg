@@ -44,7 +44,7 @@ sendSms = ( toPhone, message, callback ) => {
   }
 }
 
-sendCall = (toPhone, messageURL, callback) => {
+sendCall = (toPhone, messageURL,RecordingStatusCallback,RecordingStatusCallbackMethod, callback) => {
   creds = creds || new TwilioCredentials();
   client = client || new twilio.RestClient(creds.getSid(), creds.getAuth());
 
@@ -52,6 +52,8 @@ sendCall = (toPhone, messageURL, callback) => {
     to: toPhone,
     from: creds.getPhone(),
     url: messageURL,
+    RecordingStatusCallback,
+    RecordingStatusCallbackMethod,
     record : true
   }, function(err, call) {
       callback(err,call);
@@ -73,10 +75,15 @@ exports.submitMeterReading = (user,meter,reading,cb)=>{
 
 	var messageURL = process.env.HOST_URL + "twilio-api/SubmitReading/" + reading._id;
 	var callTo = process.env.TWILIO_SEND_TO_PHONE_NUMBER
-
-	sendCall(callTo,messageURL,(err,call) => {
-		cb(err)
-	});
+  var RecordingStatusCallback = process.env.HOST_URL + "twilio-api/ReadingHasBeenSubmited/" + reading._id
+  var RecordingStatusCallbackMethod = "POST"
+	sendCall(callTo,
+            messageURL,
+            RecordingStatusCallback,
+            RecordingStatusCallbackMethod,
+            (err,call) => {
+        		cb(err)
+        	});
 
 
 

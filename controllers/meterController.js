@@ -316,7 +316,7 @@ exports.getLatestReadingsForMeter = (meter,cb) => {
 
 //Confirm a Reading
 
-exports.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
+exports.addReadingConfirmation = (readingID,audioUrl,audioTranscript,cb) => {
 
 	//Find Reading
 	var q = {
@@ -334,13 +334,13 @@ exports.addReadingConfirmation = (readingID,audioBuffer,audioTranscript,cb) => {
 			var conf = new Confirmation({
 				reading,
 				transcript: audioTranscript,
-				audio:audioBuffer
+				audioUrl:audioUrl
 			})
 			conf.save((err) => {
 				if(err)
 					cb(err)
 				else
-					emailController.sendReadingConfirmation(reading.owner,reading.meter, reading, audioBuffer,audioTranscript, (err) => { cb(err) } );
+					emailController.sendReadingConfirmation(reading.owner,reading.meter, reading, audioUrl,audioTranscript, (err) => { cb(err) } );
 			});
 
 		}

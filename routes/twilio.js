@@ -37,6 +37,20 @@ router.post('/SubmitReading/:readingID', (req, res) => {
 
 router.post('/ReadingHasBeenSubmited/:ReadingID', (req, res) => {
 
+  console.log("============Confirm Recived===========");
+  if(req.body.CallStatus =="no-answer"){
+    emailController.addReadingConfirmation(readingID,
+      req.body.CallStatus.RecodingUrl,
+      audioTranscript,
+      (err)=>{
+        if(err){
+          res.status(500).send(err)
+        }else{
+          res.send({success:true})
+        }
+      })
+  }
+
 });
 
 

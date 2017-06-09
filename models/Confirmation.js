@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const confirmationSchema = new Schema({
   reading : { type: Schema.Types.ObjectId, ref: 'Reading' },
   transcript : String,
-  audio : Buffer
+  audioUrl : String
 
 }, { timestamps: true });
 
