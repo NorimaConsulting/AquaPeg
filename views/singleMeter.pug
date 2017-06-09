@@ -30,6 +30,8 @@ block content
               td
                 if reading.confirmation
                   |Yes
+                  a.btn.btn-success.btn-sm(href=reading.confirmation.audioUrl)
+                    i.fa.fa-play-circle-o
                 else
                   |No
 
