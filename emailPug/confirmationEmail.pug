@@ -3,12 +3,12 @@ html
   head
     meta( charset="UTF-8" )
   body
-    h1 Hi! Time to update your water meter
+    h1 Cool
     p We have entered a new reading into the city system
     h4 Meter # :
-      |= meter.meterNumber
+      |= #{meter.meterNumber}
     h4 Reading :
-      |= reading.readingString
+      |= #{reading.readingString}
 
     a(href=audioUrl)
       |Check Here for audio proof
