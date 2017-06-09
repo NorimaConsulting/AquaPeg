@@ -46,10 +46,10 @@ router.post('/ReadingHasBeenSubmited/:readingID', (req, res) => {
   console.log("============END===========");
 
 
-  if(req.body.CallStatus =="no-answer"){
+  if(req.body.RecordingStatus =="completed"){
     console.log(req.body.RecodingUrl)
     emailController.addReadingConfirmation(readingID,
-      req.body.RecodingUrl,
+      req.body.RecordingUrl,
       audioTranscript,
       (err)=>{
         if(err){

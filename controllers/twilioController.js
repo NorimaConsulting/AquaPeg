@@ -65,7 +65,7 @@ sendCall = (toPhone, messageURL,RecordingStatusCallback,RecordingStatusCallbackM
 
 exports.submitMeterReading = (user,meter,reading,cb)=>{
 
-	console.log("==========================");
+	console.log("=============PHONE CALL OUT=============");
 	console.log("	Submitting A MeterReading To The City		");
 	console.log("==========================");
 	console.log("User Email: "+ user.email);
