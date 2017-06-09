@@ -336,10 +336,20 @@ exports.addReadingConfirmation = (readingID,audioUrl,audioTranscript,cb) => {
 				audioUrl:audioUrl
 			})
 			conf.save((err) => {
-				if(err)
+				if(err){
 					cb(err)
+				}
 				else
-					emailController.sendReadingConfirmation(reading.owner,reading.meter, reading, audioUrl,audioTranscript, (err) => { cb(err) } );
+				{
+					reading.confirmation = conf
+					reading.save((err) => {
+						if(err){
+							cb(err)
+						}else{
+							emailController.sendReadingConfirmation(reading.owner,reading.meter, reading, audioUrl,audioTranscript, (err) => { cb(err) } );
+						}
+					})
+				}
 			});
 
 		}
