@@ -99,6 +99,7 @@ exports.sendReadingConfirmation = (user, meter, reading, audioUrl, audioTranscri
 	var content = new helper.Content("text/html", confirmationEmail({
 		meter,
 		reading,
+		audioUrl,
 		hostUrl:process.env.HOST_URL
 	}));
 	var mail = new helper.Mail(fromEmail, subject, toEmail, content);
