@@ -14,9 +14,8 @@
         li(class=(title == 'Home') ? 'active' : undefined)
           a(href='/') Home
         li(class=(title == 'All Meters') ? 'active' : undefined)
-          a(href='/All-Meters') All Meters
-        li
-          a(href='/status') Status
+          a(href='/All-Meters') My Meters
+
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=(title == 'Login') ? 'active' : undefined)
