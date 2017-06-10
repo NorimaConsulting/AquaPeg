@@ -45,19 +45,25 @@ sendSms = ( toPhone, message, callback ) => {
 }
 
 sendCall = (toPhone, messageURL,RecordingStatusCallback,RecordingStatusCallbackMethod, callback) => {
-  creds = creds || new TwilioCredentials();
-  client = client || new twilio.RestClient(creds.getSid(), creds.getAuth());
 
-  client.makeCall({
-    to: toPhone,
-    from: creds.getPhone(),
-    url: messageURL,
-    RecordingStatusCallback,
-    RecordingStatusCallbackMethod,
-    record : true
-  }, function(err, call) {
-      callback(err,call);
-  });
+  if(process.env.TWILIO_SID =="fake"){
+    console.log("THIS IS A FAKE PHONE CALL")
+    callback(null,null);
+  }else{
+    creds = creds || new TwilioCredentials();
+    client = client || new twilio.RestClient(creds.getSid(), creds.getAuth());
+
+    client.makeCall({
+      to: toPhone,
+      from: creds.getPhone(),
+      url: messageURL,
+      RecordingStatusCallback,
+      RecordingStatusCallbackMethod,
+      record : true
+    }, function(err, call) {
+        callback(err,call);
+    });
+  }
 }
 
 
