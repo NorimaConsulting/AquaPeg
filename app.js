@@ -122,25 +122,6 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 app.locals.moment = require('moment');
 
 
-
-if(process.env.DEVELOPMENT == "on"){
-  console.log(chalk.red('======================'));
-  console.log(chalk.red('WARNING DEV MODE ON'));
-  console.log(chalk.red('======================'));
-
-}else{
-  // set up a route to redirect http to https
-  app.use(function(req,res,next ){
-      if(req.header('X-Forwaded-Proto') != 'https'){
-        res.redirect(process.env.HOST_URL+req.url)
-      }else{
-        next();
-      }
-  })
-
-}
-
-
 /**
  * Primary app routes.
  */
