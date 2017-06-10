@@ -132,7 +132,7 @@ if(process.env.DEVELOPMENT == "on"){
   // set up a route to redirect http to https
   app.use(function(req,res,next ){
       if(!req.connection.encrypted){
-        res.redirect("https://"+HOST_URL+req.url)
+        res.redirect(process.env.HOST_URL+req.url)
       }
   })
 
