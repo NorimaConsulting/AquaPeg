@@ -68,7 +68,7 @@ function addLatestReadingToMeter(meters,cb){
 	for (var i = 0; i < meters.length; i++) {
 
 		(function(ii) {
-			Reading.findOne({meter:meters[i]})
+			Reading.findOne({meter:meters[i]._id})
 			.sort({createdAt: -1})
 			.exec((err,reading)=>{
 				metersLeft--;
@@ -103,26 +103,20 @@ exports.getMetersForUserWithLatestReading = (user,cb) => {
 
 	//Check User && !deletedAtDate
 	var q = {owner:user, deletedAtDate:null};
-	Meter.find( q, (err, meters)=> {
+	Meter.find( q)
+	.lean()
+	.exec((err, meters)=> {
 
 		var waitingFor = meters.length;
 		if(waitingFor<=0){
 			cb(err,meters)
-		}
+		}else{
 
-		for (var i = 0; i < meters.length; i++) {
-			var curPos = i;
-			exports.getLatestReadingsForMeter(meters[i],(err,reading) => {
-				if(reading){
-					meters[curPos].latestReading = reading
-				}
-
-				waitingFor--;
-				if(waitingFor<=0){
+			addLatestReadingToMeter(meters, (err,meters)=>{
 					cb(err,meters)
-				}
 			});
-		}
+	}
+
 	});
 
 }

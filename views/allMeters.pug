@@ -18,21 +18,22 @@ block content
           tr
             th Meter Number
             th Latest Reading
+            th
             th Actions
         tbody
           each meter in meters
             tr
               td= meter.meterNumber
-              td
-                if meter.latestReadings
-                  |meter.latestReadings.created_at
-                else
-                  |No Readings
+              if meter.latestReading != null
+                td #{moment(meter.latestReading.createdAt).calendar()}
+                td #{meter.latestReading.readingString}
+              else
+                td No Readings
+
               td
                 a.btn.btn-primary.btn-sm(href='/Meter/'+meter._id+'/')
-                  i.fa.fa-eye
-                a.btn.btn-danger.btn-sm.deleteMeterButton(href='#' meterID=meter._id)
-                  i.fa.fa-trash-o
+                  i.fa.fa-eye(style="margin:0px")
+                  |  View
 
 
           if meters.length == 0

@@ -23,12 +23,18 @@ router.get('/citations', (req, res) => {
 
 router.get('/All-Meters', passportConfig.isAuthenticated, (req, res) => {
   meterController.getMetersForUserWithLatestReading(req.user,(err,meters)=>{
+
+    console.log(meters[0])
+    console.log(meters[0].latestReading)
+    console.log(meters[0].latestReading)
+
+
     if(err){
       res.status(500).send(err)
     }else{
       res.render('allMeters', {
         title: 'All Meters',
-        meters
+        meters: json.parse(json.stringify(meters))
       });
     }
 
