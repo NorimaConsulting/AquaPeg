@@ -15,6 +15,12 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/citations', (req, res) => {
+  res.render('citations', {
+    title: 'Citations'
+  });
+});
+
 router.get('/All-Meters', passportConfig.isAuthenticated, (req, res) => {
   meterController.getMetersForUserWithLatestReading(req.user,(err,meters)=>{
     if(err){
