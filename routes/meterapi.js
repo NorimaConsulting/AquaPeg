@@ -13,7 +13,7 @@ router.post('/meter/', passportConfig.isAuthenticated, (req, res) => {
 
   var meterNumber = req.body.meterNumber;
   meterNumber = meterNumber.trim();
-  if(isNormalInteger(meterNumber)){
+  if(isMeterNumber(meterNumber)){
     meterController.addMeterForUser(req.user, meterNumber,(err)=>{
 
       if(err){
@@ -56,7 +56,7 @@ router.post('/meter/:meterID/Reading/', passportConfig.isAuthenticated, (req, re
   meterID = meterID.trim();
   readingString = readingString.trim();
 
-  if(meterID && req.user && isNormalInteger(readingString) ){
+  if(meterID && req.user && isReadingNumber(readingString) ){
     meterController.addMeterReadingWithoutReminder(readingString, req.user, meterID, (err) => {
       if(err){
         res.status(500).send(err)
@@ -75,7 +75,7 @@ router.post('/meter/:meterID/Reading/', passportConfig.isAuthenticated, (req, re
     if(!readingString)
       msg = "Missing Reading String"
 
-    if(!isNormalInteger(readingString))
+    if(!isReadingNumber(readingString))
       msg = "A Bad Reading String"
 
     res.status(400).send({message:msg})
@@ -103,10 +103,20 @@ router.post('/meter/reminder/:reminderToken/Reading/', (req, res) => {
 });
 
 
+function isMeterNumber(str) {
+  var readingLengthCheck = str.length == 9;
+  return readingLengthCheck && isNormalInteger(str);
+}
+
+function isReadingNumber(str) {
+
+  var readingLengthCheck = str.length == 5 || str.length == 6;
+  return readingLengthCheck && isNormalInteger(str);
+}
 
 function isNormalInteger(str) {
     var n = Math.floor(Number(str));
-    return String(n) === str && n >= 0;
+    return !isNaN(str) && n >= 0;
 }
 
 
