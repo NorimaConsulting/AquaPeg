@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const REMINDER_PERIOD = (1000*60*60*24*365)/5;
+const REMINDER_PERIOD = (1000*60*60*24*365)/4;
 //const REMINDER_PERIOD = (1000*60*4);
 
 const meterSchema = new Schema({
