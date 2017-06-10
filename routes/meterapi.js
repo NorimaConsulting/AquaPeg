@@ -17,14 +17,21 @@ router.post('/meter/', passportConfig.isAuthenticated, (req, res) => {
     meterController.addMeterForUser(req.user, meterNumber,(err)=>{
 
       if(err){
-        res.status(500).send(err)
+        if(err.code == 11000){
+          res.status(500).send({message:"Have you already added this meter number?"})
+        }else if(err.name == "ValidationError"){
+          res.status(500).send({message:"Number must be 9 digits no spaces and no leters or symbols."})
+        }else{
+          res.status(500).send(err)
+        }
+
       }else{
         res.send({success:true})
       }
 
     });
   }else{
-    res.status(400).send({})
+    res.status(400).send({message:"Number must be 9 digits no spaces and no leters or symbols."})
   }
 
 });
@@ -76,7 +83,7 @@ router.post('/meter/:meterID/Reading/', passportConfig.isAuthenticated, (req, re
       msg = "Missing Reading String"
 
     if(!isReadingNumber(readingString))
-      msg = "A Bad Reading String"
+      msg = "Readings need to be 5-6 digits long. Don't enter the decimel."
 
     res.status(400).send({message:msg})
   }

@@ -258,12 +258,12 @@ exports.addMeterReadingWithoutReminder = (readingString, user, meterID,cb) => {
 				meter,
 			});
 
-			reading.save( (err) =>{
+			twilioController.submitMeterReading(user,meter,reading,(err) =>{
 				//Start a Call to twilio
 				if(err)
 					cb(err)
 				else
-					twilioController.submitMeterReading(user,meter,reading,(err) => { cb(err)});
+					reading.save( (err) => { cb(err)});
 			} );
 
 		}

@@ -8,22 +8,32 @@ block content
     .col-md-offset-2.col-md-8
       .form-group
           label(for='meterNumberInput') Reading Value
+          br
+          |Enter each number on your meter without the decimel place.
           input#meterIDInput.form-control(type='hidden', value=meter._id)
           if reminderToken
             input#reminderTokenInput.form-control(type='hidden', value=reminderToken)
 
 
-          input#meterReadingInput.form-control(type='text' placeholder='Reading Value')
+          input#meterReadingInput.form-control(maxlength="6" type='text' placeholder='Reading Value')
 
 
 
           .alert.hidden.alert-danger.submitNewMeterError(role='alert')
             strong Oh Snap !
-            | 
+            br
             span There was a problem, eh?
-          submit.btn.btn-success.saveReading(href='#')
+          submit.btn.btn-primary.preConfirm(href='#')
             i.fa.fa-tachometer.fa-lg
             |  Add
+          br
+          span.hidden#confirmSend()
+            h3 Are you sure?
+              br
+              span#readingConfirmText
+            submit.btn.btn-success.saveReading(href='#')
+              i.fa.fa-tachometer.fa-lg
+              |  Confirm
 
 block scripts
   script(src='/js/addReading.js')

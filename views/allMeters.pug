@@ -48,14 +48,16 @@ block content
         .modal-header
           button.close(type='button', data-dismiss='modal', aria-label='Close')
             span(aria-hidden='true') ×
-          h4#myLargeModalLabel.modal-title Add A new meter
+          h4#myLargeModalLabel.modal-title Add a new meter
         .modal-body
           .form-group
               label(for='meterNumberInput') Meter Number
-              input#meterNumberInput.form-control(type='text', placeholder='Meter Number' name='meterNumber')
+              input#meterNumberInput.form-control(maxlength="9", type='text', placeholder='Meter Number' name='meterNumber')
               .alert.hidden.alert-danger.submitNewMeterError(role='alert')
                 strong Oh Snap!
-                |There was a problem, eh?
+                br
+                span There was a problem, eh?
+
               submit.btn.btn-success.saveNewMeter(href='#')
                 i.fa.fa-tachometer.fa-lg
                 |  Add

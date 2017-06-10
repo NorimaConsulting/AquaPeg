@@ -6,7 +6,16 @@ const REMINDER_PERIOD = (1000*60*60*24*365)/4;
 
 const meterSchema = new Schema({
   type:{type:String, default:"YWGWater"},
-  meterNumber:String,
+  meterNumber:{
+    type:String,
+    validate: {
+          validator: function(v) {
+            var n = Math.floor(Number(v));
+            return !isNaN(v) && n > 0 && (v.length == 9);
+          },
+          message: '{VALUE} did not meet the spec'
+        }
+  },
   deletedAtDate:{type:Date, default:null},
   reminderSchedulePeriod:{type:Number, default:REMINDER_PERIOD},
   owner: { type: Schema.Types.ObjectId, ref: 'User' }

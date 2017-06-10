@@ -12,6 +12,16 @@ $(()=>{
     };
 
   });
+
+  $('.preConfirm').click((e) => {
+    $("#confirmSend").removeClass("hidden");
+  });
+
+  setInterval(function () {
+    $("#readingConfirmText").html($("#meterReadingInput").val());
+  }, 1000);
+
+
 })
 
 
@@ -55,6 +65,11 @@ function sendToServer(event) {
   }).fail((transcation)=>{
     $(".submitNewMeterError").removeClass("hidden");
     $(event.target).removeClass("disabled");
-    $(".submitNewMeterError span").html(transcation.responseJSON.message);
+    if(transcation.responseJSON.message === "Authenticate"){
+      $(".submitNewMeterError span").html("Sorry we had an error. Plase give us a shout and try again later. \n casey.forsyth@norimaconsulting.com");
+    }else{
+      $(".submitNewMeterError span").html(transcation.responseJSON.message);
+    }
+
   });
 }

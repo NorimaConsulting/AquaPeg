@@ -4,7 +4,7 @@ const emailController = require('./emailController');
 
 const moment = require('moment')
 
-const CHECK_SCHEDULE = 1000*60*15
+const CHECK_SCHEDULE = 1000*60*60
 
 exports.start = () =>{
   setInterval(()=>{
