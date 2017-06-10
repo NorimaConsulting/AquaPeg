@@ -2,6 +2,7 @@
 const sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 const helper = require('sendgrid').mail;
 const pug = require('pug');
+const moment = require('moment');
 
 //templates
 const reminderEmail = pug.compileFile('./emailPug/reminderEmail.pug');
@@ -14,7 +15,8 @@ exports.genericEmail = (to,subject,body,cb) => {
 	var fromEmail = new helper.Email('casey.forsyth@norimaconsulting.com');
 	var toEmail = new helper.Email(to);
 	var content = new helper.Content('text/plain',body);
-	var mail = new helper.Mail(fromEmail, subject, toEmail, content);
+	var subjectWithDate = subject + " " + moment().format("MMM Do YY h:mm")
+	var mail = new helper.Mail(fromEmail, subjectWithDate, toEmail, content);
 
 
 	var request = sg.emptyRequest({
@@ -48,7 +50,7 @@ exports.sendReminder = (user,meter,reminder,cb)=>{
 	var helper = require('sendgrid').mail;
 	var fromEmail = new helper.Email('casey.forsyth@norimaconsulting.com');
 	var toEmail = new helper.Email(user.email);
-	var subject = 'Hey, Sup? Time to check your water meter';
+	var subject = 'Hey, Sup? Time to check your water meter ' + moment().format("MMM Do YY h:mm");
 	var content = new helper.Content("text/html", reminderEmail({
 		meter,
 		reminder,
@@ -95,7 +97,7 @@ exports.sendReadingConfirmation = (user, meter, reading, audioUrl, audioTranscri
 	var helper = require('sendgrid').mail;
 	var fromEmail = new helper.Email('casey.forsyth@norimaconsulting.com');
 	var toEmail = new helper.Email(user.email);
-	var subject = 'Check it out we entered your water meter reading';
+	var subject = 'Check it out we entered your water meter reading ' + moment().format("MMM Do YY h:mm");
 	var content = new helper.Content("text/html", confirmationEmail({
 		meter,
 		reading,
