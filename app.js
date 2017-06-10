@@ -131,7 +131,7 @@ if(process.env.DEVELOPMENT == "on"){
 }else{
   // set up a route to redirect http to https
   app.use(function(req,res,next ){
-      if(!req.connection.encrypted){
+      if(req.header('X-Forwaded-Proto') != 'https'){
         res.redirect(process.env.HOST_URL+req.url)
       }else{
         next();
