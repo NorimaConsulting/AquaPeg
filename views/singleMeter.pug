@@ -23,7 +23,7 @@ block content
           each reading in readings
             tr
               if(moment(reading.createdAt).add(12, 'hours').isAfter(moment()))
-                td Submitted #{moment(reading.createdAt).fromNow()}
+                td Submitted #{moment(reading.createdAt,time_zone).fromNow("America/Winnipeg")}
               else
                 td= moment(reading.createdAt).format('LLL')
               td= reading.readingString

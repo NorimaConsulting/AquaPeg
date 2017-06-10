@@ -7,7 +7,7 @@
   "description": "Meter reading for the 21st century ",
   "repository": {
     "type": "git",
-    "url":"https://github.com/NorimaConsulting/H2-Go.git"
+    "url": "https://github.com/NorimaConsulting/H2-Go.git"
   },
   "author": "Sahat Yalkabov",
   "license": "MIT",
@@ -39,6 +39,7 @@
     "lob": "^3.9.0",
     "lusca": "^1.4.1",
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "mongoose": "^4.6.6",
     "morgan": "^1.7.0",
     "multer": "^1.2.0",

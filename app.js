@@ -119,7 +119,8 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
-app.locals.moment = require('moment');
+app.locals.moment = require('moment-timezone');
+app.locals.time_zone = process.env.TIME_ZONE || "UTC";
 
 
 /**

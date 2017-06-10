@@ -2,7 +2,7 @@
 const meterController = require('./meterController');
 const emailController = require('./emailController');
 
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 const CHECK_SCHEDULE = 1000*60*60
 

@@ -25,7 +25,7 @@ block content
             tr
               td= meter.meterNumber
               if meter.latestReading != null
-                td #{moment(meter.latestReading.createdAt).calendar()}
+                td #{moment(meter.latestReading.createdAt,time_zone).calendar("America/Winnipeg")}
                 td #{meter.latestReading.readingString}
               else
                 td No Readings
