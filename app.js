@@ -133,6 +133,8 @@ if(process.env.DEVELOPMENT == "on"){
   app.use(function(req,res,next ){
       if(!req.connection.encrypted){
         res.redirect(process.env.HOST_URL+req.url)
+      }else{
+        next();
       }
   })
 
