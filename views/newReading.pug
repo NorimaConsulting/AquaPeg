@@ -25,12 +25,20 @@ block content
             span There was a problem, eh?
           submit.btn.btn-primary.preConfirm(href='#')
             i.fa.fa-tachometer.fa-lg
-            |  Add
+            |  Send
           br
           span.hidden#confirmSend()
             h3 Are you sure?
-              br
-              span#readingConfirmText
+
+            p Your reading is:
+              | 
+              strong
+                span#readingConfirmText
+
+            p Pressing send will attempt to submit your meter reading to the City of Winnipeg.
+            p When completed we will send an email to your email address. To ensure your reading was entered successfully please listen to the audio file linked in said email and check that the reading was entered correctly.
+            p We provide this service with no guarantees and by clicking send you acknowledge that you can not hold H2-GO or Norima Consulting responsible for any consequences of missing or inaccurate meter readings.
+            p This website is not endorsed or officially recognized by the City of Winnipeg.
             submit.btn.btn-success.saveReading(href='#')
               i.fa.fa-tachometer.fa-lg
               |  Confirm
